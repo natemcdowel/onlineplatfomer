@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32" backgroundcolor="#0cb6c5">
+ <tileset firstgid="1" name="Area 01 " tilewidth="32" tileheight="32">
+  <image source="area01_tileset/area01_level_tiles.png" width="640" height="241"/>
+ </tileset>
+ <layer name="Background" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAOYAFiViqqlwBiSRL0YlOPrE4HiHVx6MemF1k9ITehi2PTiw3gUkes/sEIAoE4CIiDgTgEiEOBOAyIw3GoZyGAU4E4DYjTgTgDiDOBOAuIs3GoJwTw2TUKBj8AAOBzCFQ=
+  </data>
+ </layer>
+ <layer name="Foreground" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKhAQAEsAAB
+  </data>
+ </layer>
+</map>
