@@ -16,30 +16,39 @@ var game = {
 		{name: "die",			type: "audio",	src: "data/audio/",	channel : 1},
 		{name: "enemykill",		type: "audio",	src: "data/audio/",	channel : 1},
 		{name: "jump",			type: "audio",	src: "data/audio/",	channel : 2},
-		{name: "DST-GameForest",type: "audio",	src: "data/audio/",	channel : 1},
+		// {name: "DST-GameForest",type: "audio",	src: "data/audio/",	channel : 1},
 		// level map
-		{name: "map1",			type: "tmx",	src: "data/map/map1.json"},
-		// {name: "map1",			type: "tmx",	src: "data/map/map1.tmx"},
+		{name: "map1",			type: "tmx",	src: "data/map/map1.tmx"},
 		{name: "map2",			type: "tmx",	src: "data/map/map2.tmx"},
+		{name: "map3",			type: "tmx",	src: "data/map/map3.tmx"}, 
+
+		// Lower tier
+		{name: "map1-1",			type: "tmx",	src: "data/map/map1-1.tmx"},
+		{name: "map2-1",			type: "tmx",	src: "data/map/map2-1.tmx"},
+		// {name: "map3-1",			type: "tmx",	src: "data/map/map3-1.tmx"},
+
 		// texturePacker
 		{name: "texture",		type: "tps",	src: "data/gfx/texture.json"},
 		{name: "texture",		type:"image",	src: "data/gfx/texture.png"}
-	],
+	],  
 	
 	/* ---
 	
 		Initialize the application
 		
 		---										*/
+
+		
 	onload: function()
 	{
 		// init the video
-		if (!me.video.init('screen', 800, 600, true, 'auto')) {
+
+		if (!me.video.init('screen', 800, 600, false, 'auto')) { 
 			alert("Sorry but your browser does not support html 5 canvas. Please try with another one!");
 			return;
 		}
 		// disable interpolation when scaling
-		me.video.setImageSmoothing(false);
+		me.video.setImageSmoothing(true);
 		
 		// install the debug panel plugin
 		//me.plugin.register(debugPanel, "debug");
@@ -55,6 +64,9 @@ var game = {
 		
 		// load everything & display a loading screen
 		me.state.change(me.state.LOADING);
+
+		// Debugger
+		me.debug.renderHitBox;
 	},
 	
 	
@@ -74,16 +86,14 @@ var game = {
 		me.entityPool.add("SlimeEntity", SlimeEnemyEntity);
 		me.entityPool.add("FlyEntity", FlyEnemyEntity);
 		var coin2 = me.entityPool.add("CoinEntity", CoinEntity); 
-		console.log(coin2)
-
-
-		console.log(me.entityPool.SlimeEntity);
 
 		// add our player entity in the entity pool
 
-		me.entityPool.add("secondPlayer", Player2Entity); 
-		me.entityPool.add("mainPlayer", PlayerEntity); 
 		
+		me.entityPool.add("mainPlayer", PlayerEntity); 
+		me.entityPool.add("secondPlayer", Player2Entity); 
+		me.entityPool.add("sword", weapon);   
+		console.log(weapon); 
 		// load the texture atlas file
 		// this will be used by object entities later
 		game.texture = new me.TextureAtlas(me.loader.getAtlas("texture"), me.loader.getImage("texture"));
@@ -102,13 +112,17 @@ var PlayScreen = me.ScreenObject.extend( {
 		me.levelDirector.loadLevel("map1");
 		
 		// add a default HUD to the game mngr
-		me.game.addHUD(0,560,800,40);
+		// me.game.addHUD(0,560,800,40);
+
+		// add a default HUD to the game mngr
+		me.game.addHUD(0,0,800,40);
 		
 		// add a new HUD item 
-		me.game.HUD.addItem("score", new ScoreObject(790,00));
+		me.game.HUD.addItem("score", new ScoreObject(700,00));
+		// me.game.HUD.addItem("score", new ScoreObject(00,790));  
 		
 		// play some music
-		me.audio.playTrack("DST-GameForest");
+		// me.audio.playTrack("DST-GameForest");
 
 	}
 

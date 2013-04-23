@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<script src="/socket.io/socket.io.js"></script>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js'></script>
+<script>
+	
+	var clientid = '';
+	var clientData = new Array();
+	var globalClientIndex;
+	var users;
+	var userName = '';  
+    var playerX = '';
+	var playerY = '';
+	var userlist = '';
+	var usernumber; 
+	var moveLeft = false;
+	var moveRight = false;
+	var left = false;
+	var right = false;
+	var up = false;
+	var coinid = null;
+	var levelDirection = '';
+	var playerMap = ''; 
+	var visiblePlayer = '';  
+	var socketUpdated = '';
+	var playerXlast = '';
+	var playerYlast = '';
+	var nextScreenY = '';
+	var nextScreenX = '';
+
+	var socket = io.connect('http://mcdowellwebdevelopment.info:8080/');
+
+	socket.on('assignid', function (id) { 
+
+		// alert(id);
+		clientid = id;
+
+	});   
+
+	// Shows player list upon set name
+   //  socket.on('getplayers', function (user) { 
+
+   //  	users = user; // passing to global browser users 
+   //  	userlist = '';
+
+   //  	var l = user.length;
+	  //   for (var i = 0; i < l; i++) { 		 
+	  //   	userlist += user[i][3]+'<br>'; 
+   // //  		playerX[i] = user[i][1];
+			// // playerY[i] = user[i][2];
+   //  	}
+   //  	$('#userlist').html('<p>'+userlist+'</p>');
+   //  });  
+
+   // Listening for input from player
+    // addEventListener('keydown', function(e) {
+    	// Checking browser username against socket user array to get clientID to move player
+    	// if (users.length > 0) {
+	    // 	var l = users.length;
+	    // 	for (var i = 0; i < l; i++) {
+	    // 		if (users[i][3] == userName) {
+	    // 			clientid = i;
+	    // 			// alert('worked');
+	    // 		}
+	    // 	}
+    	// }  
+    	// Chopping up client data to be passed to server
+    	// var clientData = new Array();
+    	// // clientData[0] = e.keyCode; 
+    	// clientData[1] = clientid; 
+
+    	// console.log(users);  
+    	// // if (e.keyCode == 39) moveLeft = true;
+    	// // if (e.keyCode == 37) moveRight = true;
+    	// socketResponse('keypress',clientData); 
+	// }, false);  
+
+   //  socket.on('syncplayers', function (user) { 
+   //  	users = user; // passing to global browser users
+
+   //  	var l = user.length; 
+	  //   for (var i = 0; i < l; i++) {
+   //  		playerX[i] = user[i][1];
+			// playerY[i] = user[i][2];
+			// usernumber = users.length;  
+		 //    users[usernumber][1] = playerX[i];
+		 //    users[usernumber][2] = playerY[i];  
+   //  	}
+   //  	console.log(user);   
+   //  });
+
+    socket.on('removeplayer', function (clientid) { 
+    	playerX.splice(clientid, 1);
+    	playerY.splice(clientid, 1);   
+    });
+
+	// Moves player and sends positioning information to server
+	// socket.on('playermove', function (keystroke, clientIndex) {
+	// 	movePlayer(keystroke,clientIndex);
+	// 	socketResponse("syncplayers", users);
+ //    }); 
+
+    	// Passing input from browser to socket.io server
+	function socketResponse(type, data) {
+			var socket = io.connect('http://mcdowellwebdevelopment.info:8080/');
+		 	socket.emit(type, data);
+	}
+
+		// Get the canvas element form the page
+	var canvas = document.queryselector('canvas');
+
+</script>
+<html>
+<head>
+  <title>melonJS - plateformer demo</title>
+  <meta name="description" content="melonJS homepage" />
+  <meta name="keywords" content="melonJS, HTML5, javascript, game, engine, framework" />
+  <link rel="stylesheet" type="text/css" href="http://nsjof.org/game/melonEx/melonJS/examples/platformer//style/style.css" title="style" />
+	<style type="text/css">
+		canvas {
+			display: block;
+			tabindex:1; 
+			image-rendering: optimizeSpeed;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+  </head>
+<body>
+ <!--  <div id="main">
+    <div id="site_content"> -->
+		<center> 
+		<div id="content">
+			<!-- Canvas -->
+			<div id="screen" style="float:left;"></div>
+
+			<!-- Right Login Screen -->
+			<div id="signin" style="float:left; width:15%; margin:15px;">
+				<h1>Please enter your name</h1>
+				<input type='text' id='userNameField'>
+				<button value='Start' onclick='userName = $("#userNameField").val(); socketResponse("setname", $("#userNameField").val()); $("#signin").hide();'>Start</button>
+			</div>
+
+			<div id="userhead" style="float:left; width:15%; margin:15px;"><h1>User List: id#<script>document.write(clientid)</script></h1><hr>
+				<div id="leave"><button onclick='socketResponse("leave", userName); window.location = "http://www.google.com/";'>Leave</button></div>
+				<div id="userlist" style=""></div> 
+			</div>
+
+		<script type="text/javascript" src="build/melonJS-0.9.7.js"></script>
+		<script type="text/javascript" src="plugins/debug/debugPanel.js"></script>
+         <script type="text/javascript" src="entities.js"></script>
+         <script type="text/javascript" src="main.js"></script>
+		 <script>
+		 	function fullscreen(){
+			   alert('test')
+	           var el = document.getElementById('canvas');
+	 
+	           if(el.webkitRequestFullScreen) {
+	               el.webkitRequestFullScreen();
+	           }
+	          else {
+	             el.mozRequestFullScreen();
+	          }            
+	}
+	 
+	canvas.addEventListener("click",fullscreen) 
+		 </script>
+			</div>
+		</center>
+<!--     </div>
+  </div> -->
+</body>
+</html>
