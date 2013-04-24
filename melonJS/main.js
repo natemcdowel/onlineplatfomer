@@ -28,9 +28,14 @@ var game = {
 		// {name: "map3-1",			type: "tmx",	src: "data/map/map3-1.tmx"},
 
 		// texturePacker
+		// {name: "texture",		type: "tps",	src: "data/gfx/goblin.json"},
+		{name: "goblin",		type:"image",	src: "data/gfx/gobl.png"},   
+		{name: "lameenemy",		type:"image",	src: "data/gfx/lameenemyspr.png"},   
 		{name: "texture",		type: "tps",	src: "data/gfx/texture.json"},
-		{name: "texture",		type:"image",	src: "data/gfx/texture.png"}
+		{name: "texture",		type:"image",	src: "data/gfx/texture.png"}, 
+		
 	],  
+
 	
 	/* ---
 	
@@ -49,6 +54,8 @@ var game = {
 		}
 		// disable interpolation when scaling
 		me.video.setImageSmoothing(true);
+
+                // me.debug.renderHitBox = true;
 		
 		// install the debug panel plugin
 		//me.plugin.register(debugPanel, "debug");
@@ -76,6 +83,7 @@ var game = {
 		
 		---										*/
 	loaded: function ()	{
+
 		// set the "Play/Ingame" Screen Object
 		me.state.set(me.state.PLAY, new PlayScreen());
 		
@@ -100,6 +108,7 @@ var game = {
 		
 		// switch to PLAY state
 		me.state.change(me.state.PLAY);
+
 	}
 };
 

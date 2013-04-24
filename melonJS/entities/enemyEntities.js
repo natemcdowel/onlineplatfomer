@@ -137,22 +137,22 @@ var FlyEnemyEntity = PathEnemyEntity.extend({
 		this.parent(x, y, settings);
 	
 		// set a renderable
-		this.renderable = game.texture.createAnimationFromName([
-			"fly_normal.png", "fly_fly.png", "fly_dead.png"
-		]);
+		// this.renderable = game.texture.createAnimationFromName([
+		// 	"fly_normal.png", "fly_fly.png", "fly_dead.png"
+		// ]);
 
 		// custom animation speed ?
-		if (settings.animationspeed) {
-			this.renderable.animationspeed = settings.animationspeed; 
-		}
+		// if (settings.animationspeed) {
+		// 	this.renderable.animationspeed = settings.animationspeed; 
+		// }
 
-		// walking animatin
-		this.renderable.addAnimation ("walk", [0,1]);
-		// dead animatin
-		this.renderable.addAnimation ("dead", [2]);
+		// // walking animatin
+		// this.renderable.addAnimation ("walk", [0,1]);
+		// // dead animatin
+		// this.renderable.addAnimation ("dead", [2]);
 		
-		// set default one
-		this.renderable.setCurrentAnimation("walk");
+		// // set default one
+		// this.renderable.setCurrentAnimation("walk");
 
 		// set the renderable position to bottom center
 		this.anchorPoint.set(0.5, 1.0);		

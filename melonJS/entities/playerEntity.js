@@ -29,8 +29,8 @@ var PlayerEntity = me.ObjectEntity.extend({
 
 		// call the constructor
 		this.parent(x, y , settings); 
-
-		var socketArray = Array();
+		
+		var socketArray = Array(); 
 		socketArray[0] = clientid;
 		socketArray[1] = me.levelDirector.getCurrentLevelId();
 
@@ -61,17 +61,17 @@ var PlayerEntity = me.ObjectEntity.extend({
 
 		
 		// set a renderable
-		this.renderable = game.texture.createAnimationFromName([
-			"walk0001.png", "walk0002.png", "walk0003.png",
-			"walk0004.png", "walk0005.png", "walk0006.png",
-			"walk0007.png", "walk0008.png", "walk0009.png",
-			"walk0010.png", "walk0011.png"
-		]);
+		// this.renderable = game.texture.createAnimationFromName([
+		// 	"walk0001.png", "walk0002.png", "walk0003.png",
+		// 	"walk0004.png", "walk0005.png", "walk0006.png",
+		// 	"walk0007.png", "walk0008.png", "walk0009.png",
+		// 	"walk0010.png", "walk0011.png"
+		// ]);
 		
-		// define a basic walking animatin
-		this.renderable.addAnimation ("walk",  [0,2,1]);
-		// set as default
-		this.renderable.setCurrentAnimation("walk");
+		// // define a basic walking animatin
+		// this.renderable.addAnimation ("walk",  [0,2,1]);
+		// // set as default
+		// this.renderable.setCurrentAnimation("walk");
 
 		// set the renderable position to bottom center
 		this.anchorPoint.set(0.5, 1.0); 
@@ -194,7 +194,8 @@ var PlayerEntity = me.ObjectEntity.extend({
 		
 		// COLLISIONS with various objects
 		var res = me.game.collide(this);
-		console.log(res)
+		console.log(res);
+		
 		if (res) {
 			switch (res.obj.type) {	
 				case me.game.ENEMY_OBJECT : {
