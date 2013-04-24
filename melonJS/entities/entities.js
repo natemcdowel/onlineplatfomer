@@ -1,5 +1,5 @@
 
-v
+
 
 /**
  * a coin (collectable) entiry

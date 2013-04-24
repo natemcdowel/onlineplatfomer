@@ -28,7 +28,7 @@
 	var nextScreenY = '';
 	var nextScreenX = '';
 
-	var socket = io.connect('mcdowellwebdevelopment.info:8080');
+	var socket = io.connect('10.10.10.100:80');
 
 	socket.on('assignid', function (id) { 
 		clientid = id;
@@ -41,7 +41,7 @@
 
     // Passing input from browser to socket.io server
 	function socketResponse(type, data) {
-			var socket = io.connect('mcdowellwebdevelopment.info:8080');
+			var socket = io.connect('10.10.10.100:80');
 		 	socket.emit(type, data);
 	}
 </script>
