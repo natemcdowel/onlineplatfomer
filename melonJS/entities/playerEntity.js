@@ -7,6 +7,8 @@
 var PlayerEntity = me.ObjectEntity.extend({	
 	init: function(x, y, settings) { 
 
+		
+
 		// console.log(me.game.currentLevel.width); 
 
 		y = nextScreenY;
@@ -89,7 +91,7 @@ var PlayerEntity = me.ObjectEntity.extend({
 		// console.log(this.pos.x + ' : ' + this.pos.y);
 
 		// Updating hit box every frame
-		this.updateColRect(20,32, -1,0); 
+		this.updateColRect(0,24, -1,0); 
 
 		if (me.input.isKeyPressed('attack'))	{ 
 

@@ -48,14 +48,14 @@ var game = {
 	{
 		// init the video
 
-		if (!me.video.init('screen', 800, 600, false, 'auto')) { 
+		if (!me.video.init('screen', 720, 480, false, 'auto')) { 
 			alert("Sorry but your browser does not support html 5 canvas. Please try with another one!");
 			return;
 		}
 		// disable interpolation when scaling
 		me.video.setImageSmoothing(true);
 
-                // me.debug.renderHitBox = true;
+        me.debug.renderHitBox = true;
 		
 		// install the debug panel plugin
 		//me.plugin.register(debugPanel, "debug");
