@@ -4,15 +4,90 @@
 /*																					*/
 /************************************************************************************/
 
+var weaponEntity = me.ObjectEntity.extend({	
+
+
+	init: function (x, y, settings) {
+
+		mainPlayer = me.game.getEntityByName('mainPlayer')
+		// console.log(mainPlayer[0].pos.x)
+
+		this.parent(mainPlayer[0].pos.x+10, mainPlayer[0].pos.y, settings);
+		
+		// make it collidable
+		this.collidable = true;
+		this.weapon = 'sword';
+		this.cooldown = true;
+		
+
+	},
+
+	attack : function () {
+
+		var self = this;
+		if (self.cooldown == true) {
+
+			self.cooldown = false;
+			setTimeout(function(){self.cooldown = true},700);
+			// Which side is the player attacking?	
+			if (clientData[0] == 'left') {
+				this.updateColRect(-0,60, 20,25);
+			}
+			if (clientData[0] == 'right') {
+				this.updateColRect(80,60, 20,25);
+			} 	
+		}
+	},
+
+	update : function () {
+
+		this.updateColRect(0,0, 0,0);
+		mainPlayer = me.game.getEntityByName('mainPlayer')
+		this.pos.x = mainPlayer[0].pos.x;
+		this.pos.y = mainPlayer[0].pos.y;
+
+		if (mainPlayer[0].attack == true) { 
+			this.attack(); 
+		}
+
+		// COLLISIONS with various objects
+		var res = me.game.collide(this);
+		// console.log(res);
+		
+		if (res) {
+			switch (res.obj.type) {	
+				case me.game.ENEMY_OBJECT : {
+					// if ((res.y>0) && this.falling) {
+					// 	// jump
+					// 	this.vel.y -= this.maxVel.y * me.timer.tick;
+					// } else {
+					// 	this.hurt();
+					// 	this.enemyhit();
+					// }
+					// break;
+					// alert('test')
+				}
+				
+				case "spikeObject" :{
+					// jump & die
+					this.vel.y -= this.maxVel.y * me.timer.tick;
+					this.hurt();
+
+					break;
+				}
+
+				default : break;
+			}
+		}
+	}
+});
+
 var PlayerEntity = me.ObjectEntity.extend({	
 	init: function(x, y, settings) { 
 
-		
-
-		// console.log(me.game.currentLevel.width); 
-
 		y = nextScreenY;
 
+		y = 1232;
 		// Check if player reached screen and set position accordingly to new screen
 		if (levelDirection == 'west') {
 			x = 1550;
@@ -31,6 +106,9 @@ var PlayerEntity = me.ObjectEntity.extend({
 
 		// call the constructor
 		this.parent(x, y , settings); 
+
+		// Weapon delay
+		this.cooldown = true;
 		
 		var socketArray = Array(); 
 		socketArray[0] = clientid;
@@ -40,7 +118,7 @@ var PlayerEntity = me.ObjectEntity.extend({
 		socketResponse('changemapserver', socketArray);  
 
 		// walking & jumping speed 
-		this.setVelocity(6, 25); 
+		this.setVelocity(6, 22); 
 		
 		this.setFriction(0.4,0); 
 
@@ -53,6 +131,10 @@ var PlayerEntity = me.ObjectEntity.extend({
 		
 		// set the display around our position 
 		me.game.viewport.follow(this, me.game.viewport.AXIS.BOTH);
+
+		if (settings.animationspeed) {
+			this.renderable.animationspeed = settings.animationspeed; 
+		}
 				
 		// enable keyboard
 		me.input.bindKey(me.input.KEY.LEFT,	 "left");
@@ -60,23 +142,19 @@ var PlayerEntity = me.ObjectEntity.extend({
 		me.input.bindKey(me.input.KEY.UP,	"jump", true); 
 		me.input.bindKey(me.input.KEY.X,	"attack"); 
 		me.input.bindKey(me.input.KEY.DOWN,	"down");
-
 		
-		// set a renderable
-		// this.renderable = game.texture.createAnimationFromName([
-		// 	"walk0001.png", "walk0002.png", "walk0003.png",
-		// 	"walk0004.png", "walk0005.png", "walk0006.png",
-		// 	"walk0007.png", "walk0008.png", "walk0009.png",
-		// 	"walk0010.png", "walk0011.png"
-		// ]);
-		
-		// // define a basic walking animatin
-		// this.renderable.addAnimation ("walk",  [0,2,1]);
-		// // set as default
-		// this.renderable.setCurrentAnimation("walk");
+		// define a basic walking animatin
+		this.renderable.addAnimation ("walk",  [0,1,2]); 
+		this.renderable.addAnimation ("crouch",  [3]);
+		this.renderable.addAnimation ("jumpup",  [5]);
+		this.renderable.addAnimation ("jumpdown", [4]);
+		this.renderable.addAnimation ("attack",  [6,7,8]);
+		// set as default
+		this.renderable.setCurrentAnimation("walk"); 
 
 		// set the renderable position to bottom center
 		this.anchorPoint.set(0.5, 1.0); 
+
 
 	},
 
@@ -86,18 +164,30 @@ var PlayerEntity = me.ObjectEntity.extend({
 		update the player pos
 		
 	------			*/
-	update : function () {
+	update : function () { 
 
-		// console.log(this.pos.x + ' : ' + this.pos.y);
+		var self = this;
 
 		// Updating hit box every frame
-		this.updateColRect(0,24, -1,0); 
+		this.updateColRect(0,75, -1,0); 
+		this.attack = false;
 
+		this.renderable.setCurrentAnimation("walk");
+
+		if (me.input.isKeyPressed('down')) {
+
+			this.renderable.setCurrentAnimation("crouch");
+		}
 		if (me.input.isKeyPressed('attack'))	{ 
 
-			this.attack();
+	
+				this.renderable.setCurrentAnimation("attack");
+				this.attack = true;
+	
 
 		} else if (me.input.isKeyPressed('left'))	{ 
+
+			this.renderable.setCurrentAnimation("walk");
 
 			// Loading next/previous level if at the end of the screen
 			if (this.pos.x < 200) {levelDirection = 'west';}
@@ -114,10 +204,13 @@ var PlayerEntity = me.ObjectEntity.extend({
 
 			// socketResponse('keypress',clientData);  
 			// socketResponse("syncplayers", 'left');
+
 			this.vel.x -= this.accel.x * me.timer.tick;
 			this.flipX(true);
 
 		} else if (me.input.isKeyPressed('right')) {
+
+			this.renderable.setCurrentAnimation("walk");
 
 			// Loading next/previous level if at the end of the screen
 			if (this.pos.x < 200) {levelDirection = 'west';}
@@ -139,7 +232,7 @@ var PlayerEntity = me.ObjectEntity.extend({
 		}
 		
 		if (me.input.isKeyPressed('jump')) { 
-
+			
 			// Loading next/previous level if at the end of the screen
 			if (this.pos.x < 200) {levelDirection = 'west';}
 			if (this.pos.x > 1100) {levelDirection = 'east';}
@@ -165,6 +258,21 @@ var PlayerEntity = me.ObjectEntity.extend({
 				me.audio.play("jump", false);
 			}
 		} 
+		else if (this.vel.y > 0) {
+			this.renderable.setCurrentAnimation("jumpdown"); 
+			if (me.input.isKeyPressed('attack'))	{ 
+				this.renderable.setCurrentAnimation("attack");
+				this.attack = true;
+			}
+		}
+		else if (this.vel.y < 0) {
+			this.renderable.setCurrentAnimation("jumpup")
+			if (me.input.isKeyPressed('attack'))	{ 
+				this.renderable.setCurrentAnimation("attack");
+				this.attack = true;
+			}
+		}	
+
 	    // clientData[0] = 'up';
 		clientData[1] = clientid; 
 		clientData[2] = this.pos.x;
@@ -196,7 +304,7 @@ var PlayerEntity = me.ObjectEntity.extend({
 		
 		// COLLISIONS with various objects
 		var res = me.game.collide(this);
-		console.log(res);
+		// console.log(res);
 		
 		if (res) {
 			switch (res.obj.type) {	
@@ -251,17 +359,10 @@ var PlayerEntity = me.ObjectEntity.extend({
 		me.audio.play("die", false);
 		
 		this.hit = true;
-		console.log(this.hit);
+		// console.log(this.hit);
 	},
 
-	attack : function () {
 
-		// Which side is the player attacking?
-		if (clientData[0] == 'left') {
-			this.updateColRect(-60,102, -1,0);
-		}
-		if (clientData[0] == 'right') {
-			this.updateColRect(60,102, -1,0);
-		} 	
-	}
 });
+
+

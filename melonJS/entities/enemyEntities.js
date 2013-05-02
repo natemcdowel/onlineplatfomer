@@ -101,10 +101,10 @@ var SlimeEnemyEntity = PathEnemyEntity.extend({
 		// parent constructor
 		this.parent(x, y, settings);
 	
-		// set a renderable
-		this.renderable = game.texture.createAnimationFromName([
-			"slime_normal.png", "slime_walk.png", "slime_dead.png"
-		]);
+		// // set a renderable
+		// this.renderable = game.texture.createAnimationFromName([
+		// 	"slime_normal.png", "slime_walk.png", "slime_dead.png"
+		// ]);
 
 		// custom animation speed ?
 		if (settings.animationspeed) {
@@ -112,7 +112,7 @@ var SlimeEnemyEntity = PathEnemyEntity.extend({
 		}
 
 		// walking animatin
-		this.renderable.addAnimation ("walk", [0,1]);
+		this.renderable.addAnimation ("walk", [0,1,2]);
 		// dead animatin
 		this.renderable.addAnimation ("dead", [2]);
 		
@@ -121,7 +121,8 @@ var SlimeEnemyEntity = PathEnemyEntity.extend({
 
 		// set the renderable position to bottom center
 		this.anchorPoint.set(0.5, 1.0);		
-	}
+	},
+
 });
 
 /**
@@ -142,19 +143,47 @@ var FlyEnemyEntity = PathEnemyEntity.extend({
 		// ]);
 
 		// custom animation speed ?
-		// if (settings.animationspeed) {
-		// 	this.renderable.animationspeed = settings.animationspeed; 
-		// }
+		if (settings.animationspeed) {
+			this.renderable.animationspeed = settings.animationspeed; 
+		}
 
 		// // walking animatin
-		// this.renderable.addAnimation ("walk", [0,1]);
-		// // dead animatin
-		// this.renderable.addAnimation ("dead", [2]);
+		this.renderable.addAnimation ("walk", [0,1,2]);
+		// dead animatin
+		this.renderable.addAnimation ("dead", [2]);
 		
 		// // set default one
-		// this.renderable.setCurrentAnimation("walk");
+		this.renderable.setCurrentAnimation("walk");
 
 		// set the renderable position to bottom center
 		this.anchorPoint.set(0.5, 1.0);		
-	}
+	},
+	update : function () {
+
+
+		// do nothing if not visible
+		if (!this.inViewport) {
+			return false;
+		}
+		
+		if (this.alive)	{
+			if (this.walkLeft && this.pos.x <= this.startX) {
+				this.vel.x = this.accel.x * me.timer.tick;
+				this.walkLeft = false;
+				this.flipX(false);
+			} else if (!this.walkLeft && this.pos.x >= this.endX) {
+				this.vel.x = -this.accel.x * me.timer.tick;
+				this.walkLeft = true;
+				this.flipX(true);
+			}
+		} else {
+			this.vel.x = 0;
+		}
+		
+		// check & update movement
+		this.updateMovement();
+		
+		// return true if we moved of if flickering
+		return (this.parent() || this.vel.x != 0 || this.vel.y != 0);
+	},
 });

@@ -9,6 +9,7 @@ var game = {
 
 	// game assets
 	assets : [	
+		{name: "tileset",		type:"image",	src: "data/gfx/Forestground@4x.png"},
 		{name: "tileset",		type:"image",	src: "data/gfx/tileset.png"},
 		{name: "atascii",		type:"image",	src: "data/gfx/atascii_24px.png"},
 		{name: "background",	type:"image",	src: "data/gfx/background.png"},
@@ -29,11 +30,16 @@ var game = {
 
 		// texturePacker
 		// {name: "texture",		type: "tps",	src: "data/gfx/goblin.json"},
+		{name: "simon",		type:"image",	src: "data/gfx/x-example-full4x.png"}, 
+		{name: "skeleton",		type:"image",	src: "data/gfx/Skeleton3@4x.png"},
+		{name: "crow",		type:"image",	src: "data/gfx/Crow@4x.png"}, 
+		{name: "bat",		type:"image",	src: "data/gfx/Bat.png"},
+		{name: "symph",		type:"image",	src: "data/gfx/sword.png"}, 
 		{name: "goblin",		type:"image",	src: "data/gfx/gobl.png"},   
 		{name: "lameenemy",		type:"image",	src: "data/gfx/lameenemyspr.png"},   
 		{name: "texture",		type: "tps",	src: "data/gfx/texture.json"},
 		{name: "texture",		type:"image",	src: "data/gfx/texture.png"}, 
-		
+		 
 	],  
 
 	
@@ -48,14 +54,14 @@ var game = {
 	{
 		// init the video
 
-		if (!me.video.init('screen', 720, 480, false, 'auto')) { 
+		if (!me.video.init('screen', 1280, 720, true, 'auto')) { 
 			alert("Sorry but your browser does not support html 5 canvas. Please try with another one!");
 			return;
 		}
 		// disable interpolation when scaling
-		me.video.setImageSmoothing(true);
+		me.video.setImageSmoothing(false);
 
-        me.debug.renderHitBox = true;
+        // me.debug.renderHitBox = true;
 		
 		// install the debug panel plugin
 		//me.plugin.register(debugPanel, "debug");
@@ -91,17 +97,22 @@ var game = {
 		me.state.transition("fade","#FFFFFF", 250);
 
 		// add our enemy entity in the entity pool
-		me.entityPool.add("SlimeEntity", SlimeEnemyEntity);
+		
 		me.entityPool.add("FlyEntity", FlyEnemyEntity);
+		me.entityPool.add("SlimeEntity", SlimeEnemyEntity);
 		var coin2 = me.entityPool.add("CoinEntity", CoinEntity); 
 
 		// add our player entity in the entity pool
 
 		
 		me.entityPool.add("mainPlayer", PlayerEntity); 
+		me.entityPool.add("sword", weaponEntity);   
 		me.entityPool.add("secondPlayer", Player2Entity); 
-		me.entityPool.add("sword", weapon);   
+		
 		console.log(weapon); 
+
+		// me.AnimationSheet(0, 0, "simon", spritewidth, spriteheight)
+
 		// load the texture atlas file
 		// this will be used by object entities later
 		game.texture = new me.TextureAtlas(me.loader.getAtlas("texture"), me.loader.getImage("texture"));
